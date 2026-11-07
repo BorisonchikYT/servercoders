@@ -490,11 +490,93 @@ async function handleBatchFiles(files) {
   }
 }
 
+function applyTheme() {
+  const theme = localStorage.getItem('sc_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('sc_theme', next);
+  document.documentElement.setAttribute('data-theme', next);
+}
+
+/* ---------- Reveal on scroll ---------- */
+function initReveal() {
+  const els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach((el) => el.classList.add('visible'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  els.forEach((el) => io.observe(el));
+}
+
+/* ---------- Topbar scroll state ---------- */
+function initTopbar() {
+  const bar = document.getElementById('topbar');
+  if (!bar) return;
+  const onScroll = () => bar.classList.toggle('scrolled', window.scrollY > 20);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
+/* ---------- Cursor glow ---------- */
+function initCursorGlow() {
+  const glow = document.getElementById('cursorGlow');
+  if (!glow) return;
+  let x = 0, y = 0, tx = 0, ty = 0;
+  document.addEventListener('mousemove', (e) => { tx = e.clientX; ty = e.clientY; });
+  function loop() {
+    x += (tx - x) * 0.15;
+    y += (ty - y) * 0.15;
+    glow.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+function initCounters() {
+  const nums = document.querySelectorAll('[data-count]');
+  if (!nums.length) return;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.count, 10);
+      const start = performance.now();
+      const dur = 1200;
+      function step(now) {
+        const t = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(target * eased).toString();
+        if (t < 1) requestAnimationFrame(step);
+        else el.textContent = target.toString();
+      }
+      requestAnimationFrame(step);
+      io.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  nums.forEach((n) => io.observe(n));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   applyTheme();
   loadLanguages();
   updateInputStats();
   highlight();
+  initReveal();
+  initTopbar();
+  initCursorGlow();
+  initCounters();
 });
 
 window.addEventListener('load', () => setTimeout(highlight, 100));
