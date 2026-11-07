@@ -1,355 +1,40 @@
 <!DOCTYPE html>
 <html lang="ru" data-theme="dark">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Сервер Кодеров — Утилиты для разработчиков</title>
-  <meta name="description" content="Удаление комментариев, статистика, анализ и Discord-сниппеты для 30+ языков программирования." />
-  <meta name="theme-color" content="#0b0d10" />
-  <meta property="og:title" content="Сервер Кодеров — Утилиты" />
-  <meta property="og:description" content="Комментарии, статистика, анализ, Discord-embed — один API." />
-  <meta property="og:image" content="assets/logo.gif" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" href="favicon.svg" type="assets/logo.gif" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
-</head>
-<body>
-  <div class="cursor-glow" id="cursorGlow"></div>
-  <div class="backdrop">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-    <div class="grid-overlay"></div>
-  </div>
-
-  <header class="topbar" id="topbar">
-    <a href="#" class="brand">
-      <div class="brand-mark">
-        <img src="assets/logo.gif" alt="" class="logo" />
-          <defs>
-            <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="var(--primary)" />
-              <stop offset="1" stop-color="var(--accent)" />
-            </linearGradient>
-          </defs>
-          <path d="M9 12l-4 4l4 4M23 12l4 4l-4 4M19 8l-6 16" stroke="url(#brandGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
-      </div>
-      <div class="brand-text">
-        <span class="brand-title">Сервер Кодеров</span>
-      </div>
-    </a>
-    <nav class="topnav">
-      <a href="#tool" class="nav-link">Инструмент</a>
-      <a href="#batch" class="nav-link">Пакетно</a>
-      <a href="#api" class="nav-link">API</a>
-      <button id="themeBtn" class="theme-toggle" aria-label="Сменить тему">
-        <span class="theme-icon sun" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="4"/>
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-          </svg>
-        </span>
-        <span class="theme-icon moon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </span>
-      </button>
-    </nav>
-  </header>
-
-  <main>
-    <section class="hero reveal">
-      <div class="hero-inner">
-        <div class="hero-badge">
-          <span class="badge-dot"></span>
-          <span>v2.1 · 32 языка · публичный API</span>
-        </div>
-        <h1 class="hero-title">
-          <span class="line">Удалите комментарии</span>
-          <span class="line gradient-text">в коде за одну секунду</span>
-        </h1>
-        <p class="hero-sub">
-          Python, JavaScript, TypeScript, Java, C, C#, C++, Ruby, Go, Rust, PHP,
-          HTML, CSS и другие. Строки, шаблоны и регулярки остаются нетронутыми.
-        </p>
-        <div class="hero-cta">
-          <a href="#tool" class="btn primary big">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            Начать
-          </a>
-          <a href="#api" class="btn ghost big">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
-            API
-          </a>
-        </div>
-        <div class="hero-stats">
-          <div class="stat">
-            <span class="stat-num" data-count="32">0</span>
-            <span class="stat-label">языков</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <span class="stat-num" data-count="9">0</span>
-            <span class="stat-label">API</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <span class="stat-num">100%</span>
-            <span class="stat-label">privacy</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tool" class="tool reveal">
-      <div class="tool-head">
-        <div>
-          <h2 class="section-title">Инструмент</h2>
-          <p class="section-sub">Вставьте код или перетащите файл — язык определится сам.</p>
-        </div>
-      </div>
-      <div class="tool-grid">
-        <div class="panel">
-          <div class="panel-head">
-            <div class="panel-label">
-              <span class="label-dot input"></span>
-              <h3>Исходный код</h3>
-            </div>
-            <div class="panel-actions">
-              <div class="lang-picker">
-                <select id="languageSelect" class="lang-select" aria-label="Язык программирования"></select>
-                <svg class="lang-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-              </div>
-              <label class="file-btn" title="Загрузить файл">
-                <input type="file" id="fileInput" hidden />
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/></svg>
-              </label>
-            </div>
-          </div>
-          <div class="editor-wrap">
-            <pre id="inputHighlight" class="highlight" aria-hidden="true"><code></code></pre>
-            <textarea id="inputCode" spellcheck="false" placeholder="// Вставьте код или перетащите файл…&#10;function greet(name) {&#10;  // приветствие&#10;  return `Hello ${name}`;&#10;}"></textarea>
-          </div>
-          <div class="panel-foot">
-            <span id="inputStats" class="foot-chip">
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-              0 символов
-            </span>
-            <div class="panel-foot-actions">
-              <label class="switch">
-                <input type="checkbox" id="minifyCheck" />
-                <span class="switch-track"><span class="switch-thumb"></span></span>
-                <span class="switch-label">Минифицировать</span>
-              </label>
-              <button id="sampleBtn" class="btn small ghost" title="Вставить пример">Пример</button>
-              <button id="clearBtn" class="btn small ghost" title="Очистить всё">Очистить</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-head">
-            <div class="panel-label">
-              <span class="label-dot output"></span>
-              <h3>Чистый код</h3>
-            </div>
-            <div class="panel-actions">
-              <button id="diffBtn" class="icon-btn" disabled title="Сравнить до / после">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/></svg>
-              </button>
-              <button id="swapBtn" class="icon-btn" disabled title="Поменять местами">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16H3l4 4 4-4H7V4H3v12M17 8h4l-4-4-4 4h4v12h4V8"/></svg>
-              </button>
-              <button id="copyBtn" class="icon-btn" disabled title="Копировать">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              </button>
-              <button id="downloadBtn" class="icon-btn" disabled title="Скачать">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg>
-              </button>
-            </div>
-          </div>
-          <div class="editor-wrap">
-            <pre id="outputHighlight" class="highlight" aria-hidden="true"><code></code></pre>
-            <textarea id="outputCode" spellcheck="false" readonly placeholder="Здесь появится результат…"></textarea>
-          </div>
-          <div class="panel-foot">
-            <span id="outputStats" class="foot-chip muted">—</span>
-            <div class="stats-chips" id="statsChips"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tool-actions">
-        <button id="removeBtn" class="btn primary big pulse-hover" disabled>
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9h1m4 0h3M8 13h5M8 4h10a3 3 0 0 1 3 3v8c0 1.6-1.4 3-3 3h-5l-5 3v-3H8a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3M3 3l18 18"/></svg>
-          Удалить комментарии
-          <kbd class="kbd">⌘↵</kbd>
-        </button>
-      </div>
-    </section>
-
-    <section id="batch" class="batch reveal">
-      <div class="tool-head">
-        <div>
-          <h2 class="section-title">Пакетная обработка</h2>
-          <p class="section-sub">Перетащите папку — получите ZIP с чистыми копиями.</p>
-        </div>
-      </div>
-      <div id="batchDrop" class="dropzone">
-        <input type="file" id="batchInput" multiple hidden />
-        <div class="dropzone-inner">
-          <div class="dropzone-icon-wrap">
-            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><path d="M12 11v6M9 14l3-3 3 3"/></svg>
-          </div>
-          <h3>Перетащите файлы сюда</h3>
-          <p>или <b>выберите на устройстве</b></p>
-          <small>JS, TS, Python, Java, C, C++, C#, Ruby, Go, Rust, PHP, CSS, HTML и др.</small>
-        </div>
-      </div>
-      <div id="batchResult" class="batch-result"></div>
-    </section>
-
-    <section id="api" class="api reveal">
-      <div class="tool-head">
-        <div>
-          <h2 class="section-title">Публичный API</h2>
-          <p class="section-sub">Лимит — 30 запросов/мин с IP. Для Discord-ботов, CI, IDE.</p>
-        </div>
-      </div>
-
-      <div class="api-grid">
-        <div class="api-group">
-          <div class="api-group-head">
-            <span class="api-group-icon" style="background:rgba(79,209,197,0.12);color:var(--primary)">🧹</span>
-            <h3>remove</h3>
-            <span class="api-group-sub">удаление комментариев</span>
-          </div>
-          <div class="api-card"><span class="api-method post">POST</span><code>/api/remove</code></div>
-          <pre class="code-block"><code>curl -X POST https://codr.netlify.app/api/remove \
-  -H "Content-Type: application/json" \
-  -d '{"code":"# x\nprint(1)","language":"python"}'
-# → {"result":"print(1)","stats":{...}}</code></pre>
-          <div class="api-card"><span class="api-method get">GET</span><code>/api/remove?action=languages</code></div>
-        </div>
-
-        <div class="api-group">
-          <div class="api-group-head">
-            <span class="api-group-icon" style="background:rgba(124,92,255,0.12);color:var(--accent)">📊</span>
-            <h3>stats</h3>
-            <span class="api-group-sub">статистика кода</span>
-          </div>
-          <div class="api-card"><span class="api-method post">POST</span><code>/api/stats</code></div>
-          <pre class="code-block"><code>curl -X POST https://codr.netlify.app/api/stats \
-  -H "Content-Type: application/json" \
-  -d '{"code":"def f():\n  return 1","language":"python"}'
-# → {"stats":{"totalLines":2,"commentLines":0,...}}</code></pre>
-        </div>
-
-        <div class="api-group">
-          <div class="api-group-head">
-            <span class="api-group-icon" style="background:rgba(255,193,7,0.12);color:#ffc107">💬</span>
-            <h3>snippets</h3>
-            <span class="api-group-sub">Discord embed</span>
-          </div>
-          <div class="api-card"><span class="api-method post">POST</span><code>/api/snippets</code></div>
-          <pre class="code-block"><code>curl -X POST https://codr.netlify.app/api/snippets \
-  -H "Content-Type: application/json" \
-  -d '{"code":"print(1)","language":"python"}'
-# → Discord embed JSON, отправь channel.send(response)</code></pre>
-        </div>
-
-        <div class="api-group">
-          <div class="api-group-head">
-            <span class="api-group-icon" style="background:rgba(245,101,101,0.12);color:var(--danger)">🔗</span>
-            <h3>paste</h3>
-            <span class="api-group-sub">short-link на 24 часа</span>
-          </div>
-          <div class="api-card"><span class="api-method post">POST</span><code>/api/paste</code></div>
-          <pre class="code-block"><code>curl -X POST https://codr.netlify.app/api/paste \
-  -H "Content-Type: application/json" \
-  -d '{"code":"print(1)","language":"python"}'
-# → {"id":"abc123","url":"https://codr.netlify.app/p/abc123"}</code></pre>
-          <div class="api-card"><span class="api-method get">GET</span><code>/api/paste?id=abc123</code></div>
-        </div>
-
-        <div class="api-group">
-          <div class="api-group-head">
-            <span class="api-group-icon" style="background:rgba(72,187,120,0.12);color:var(--success)">🔬</span>
-            <h3>explain</h3>
-            <span class="api-group-sub">анализ структуры</span>
-          </div>
-          <div class="api-card"><span class="api-method post">POST</span><code>/api/explain</code></div>
-          <pre class="code-block"><code>curl -X POST https://codr.netlify.app/api/explain \
-  -H "Content-Type: application/json" \
-  -d '{"code":"def f():\n  return 1","language":"python"}'
-# → {"functions":["f"],"complexity":{"score":1,"grade":"A"},...}</code></pre>
-        </div>
-
-        <div class="api-group">
-          <div class="api-group-head">
-            <span class="api-group-icon" style="background:rgba(56,178,172,0.12);color:var(--primary-2)">💚</span>
-            <h3>health</h3>
-            <span class="api-group-sub">статус сервиса</span>
-          </div>
-          <div class="api-card"><span class="api-method get">GET</span><code>/api/health</code></div>
-          <pre class="code-block"><code>curl https://codr.netlify.app/api/health
-# → {"status":"ok","storage":"ok","languages":32,...}</code></pre>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="foot-inner">
-      <div class="foot-brand">
-        <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
-          <path d="M9 12l-4 4l4 4M23 12l4 4l-4 4M19 8l-6 16" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
-        <div>
-          <div class="foot-title">Сервер Кодеров</div>
-          <div class="foot-sub">Инструмент для разработчиков</div>
-        </div>
-      </div>
-      <p class="muted">© 2026 · Сделано с ❤️</p>
-    </div>
-  </footer>
-
-  <div id="diffModal" class="modal" hidden>
-    <div class="modal-backdrop"></div>
-    <div class="modal-content">
-      <div class="modal-head">
-        <h3>Сравнение «до / после»</h3>
-        <button id="diffClose" class="icon-btn" aria-label="Закрыть">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-      </div>
-      <div id="diffBody" class="diff-body"></div>
-    </div>
-  </div>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-c.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-ruby.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-rust.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-php.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/diff-match-patch@1.0.5/index.min.js" defer></script>
-  <script src="app.js" defer></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Сервер Кодеров — Утилиты для разработчиков</title>
+    <meta
+      name="description"
+      content="Удаление комментариев, статистика, анализ и Discord-сниппеты для 30+ языков программирования."
+    />
+    <meta name="theme-color" content="#08090d" />
+    <meta property="og:title" content="Сервер Кодеров — Утилиты" />
+    <meta property="og:description" content="Комментарии, статистика, анализ, Discord-embed — один API." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('sc_theme');
+          if (t === 'light' || t === 'dark') {
+            document.documentElement.setAttribute('data-theme', t);
+          } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
