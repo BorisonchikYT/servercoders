@@ -1,13 +1,8 @@
 {
-    "name": "server-coderov",
-    "version": "1.0.0",
-    "description": "Comment remover for multiple programming languages",
-    "private": true,
-    "scripts": {
-      "dev": "netlify dev",
-      "build": "echo 'no build needed'"
-    },
-    "devDependencies": {
-      "netlify-cli": "^17.0.0"
-    }
+  "name": "servercoders",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'no build needed'"
   }
+}
