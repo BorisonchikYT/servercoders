@@ -529,17 +529,21 @@
     </div>
   </footer>
 
-  <!-- ============ DIFF MODAL ============ -->
-  <div id="diffModal" class="fixed inset-0 z-[200] grid place-items-center p-6" hidden>
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-md" data-close></div>
+<!-- ============ DIFF MODAL ============ -->
+<div id="diffModal" class="fixed inset-0 z-[200] grid place-items-center p-4 sm:p-6" hidden>
+    <!-- Фон-затемнение (закрывает только при клике по нему) -->
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-md" id="diffBackdrop"></div>
+    
+    <!-- Само окно -->
     <div class="relative w-full max-w-3xl max-h-[82vh] flex flex-col rounded-lg border border-border bg-surface shadow-2xl animate-scale-in">
-      <div class="flex items-center justify-between px-5 py-3.5 border-b border-border">
+      <div class="flex items-center justify-between px-5 py-3.5 border-b border-border shrink-0">
         <h3 class="text-sm font-bold">Сравнение «до / после»</h3>
-        <button data-close class="grid place-items-center w-8 h-8 rounded-sm border border-border bg-surface-2 text-text-muted transition-all hover:text-primary hover:border-primary">
+        <button id="diffCloseBtn" type="button" class="grid place-items-center w-8 h-8 rounded-sm border border-border bg-surface-2 text-text-muted transition-all hover:text-primary hover:border-primary">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
-      <div id="diffBody" class="flex-1 overflow-auto p-5 font-mono text-xs leading-relaxed"></div>
+      <!-- Контент скроллится независимо -->
+      <div id="diffBody" class="flex-1 overflow-auto p-5 font-mono text-xs leading-relaxed text-text"></div>
     </div>
   </div>
 
@@ -746,19 +750,26 @@ console.log(greet("Developer"));`;
         input.value = result; resetOut(); updateStats(); render();
       });
 
+      // Обработчик кнопки Diff
       diffBtn.addEventListener('click', () => {
         if (!result) return;
-        document.getElementById('diffModal').hidden = false;
-        document.body.style.overflow = 'hidden';
+        
+        // Показываем модалку
+        const modal = document.getElementById('diffModal');
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden'; // блокируем скролл страницы
+        
         const body = document.getElementById('diffBody');
         const before = input.value, after = result;
         const bl = before.split('\n'), al = after.split('\n');
         const max = Math.max(bl.length, al.length);
+        
         let html = '';
         for (let i = 0; i < max; i++) {
           const b = bl[i] ?? '', a = al[i] ?? '';
-          if (b === a) html += `<div class="px-2 py-0.5 rounded-sm opacity-60"><span class="inline-block w-4 text-text-muted"> </span>${esc(b)}</div>`;
-          else {
+          if (b === a) {
+            html += `<div class="px-2 py-0.5 rounded-sm opacity-60"><span class="inline-block w-4 text-text-muted"> </span>${esc(b)}</div>`;
+          } else {
             if (b) html += `<div class="px-2 py-0.5 rounded-sm bg-danger/15 line-through opacity-70"><span class="inline-block w-4 text-danger font-bold">−</span>${esc(b)}</div>`;
             if (a) html += `<div class="px-2 py-0.5 rounded-sm bg-success/15"><span class="inline-block w-4 text-success font-bold">+</span>${esc(a)}</div>`;
           }
@@ -766,6 +777,29 @@ console.log(greet("Developer"));`;
         body.innerHTML = html || '<div class="text-text-muted">Изменений нет.</div>';
       });
 
+      // Закрытие по кнопке-крестику
+      document.getElementById('diffCloseBtn').addEventListener('click', () => {
+        document.getElementById('diffModal').hidden = true;
+        document.body.style.overflow = '';
+      });
+
+      // Закрытие по клику на фон
+      document.getElementById('diffBackdrop').addEventListener('click', () => {
+        document.getElementById('diffModal').hidden = true;
+        document.body.style.overflow = '';
+      });
+
+      // Закрытие по Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          const modal = document.getElementById('diffModal');
+          if (!modal.hidden) {
+            modal.hidden = true;
+            document.body.style.overflow = '';
+          }
+        }
+      });
+      
       fileInput.addEventListener('change', async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
