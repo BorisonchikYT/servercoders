@@ -5,9 +5,76 @@
 [build.environment]
   NODE_VERSION = "20"
 
+[[redirects]]
+  from = "/api/remove"
+  to = "/.netlify/functions/remove"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/batch"
+  to = "/.netlify/functions/batch"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/stats"
+  to = "/.netlify/functions/stats"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/snippets"
+  to = "/.netlify/functions/snippets"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/paste"
+  to = "/.netlify/functions/paste"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/explain"
+  to = "/.netlify/functions/explain"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/health"
+  to = "/.netlify/functions/health"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/p/:id"
+  to = "/.netlify/functions/paste?id=:id"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
+
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
+
+[[headers]]
+  for = "/app.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/style.css"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

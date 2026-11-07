@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0d10"/>
+      <stop offset="1" stop-color="#1b2030"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4fd1c5"/>
+      <stop offset="1" stop-color="#7c5cff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="200" cy="150" r="300" fill="#4fd1c5" opacity="0.08"/>
+  <circle cx="1000" cy="500" r="300" fill="#7c5cff" opacity="0.08"/>
+  <text x="80" y="220" font-family="Inter, sans-serif" font-weight="800" font-size="72" fill="#e7ecf3">Сервер Кодеров</text>
+  <text x="80" y="320" font-family="Inter, sans-serif" font-weight="800" font-size="72" fill="url(#accent)">Удалите комментарии</text>
+  <text x="80" y="420" font-family="Inter, sans-serif" font-size="36" fill="#8b93a7">в коде за одну секунду</text>
+  <text x="80" y="540" font-family="JetBrains Mono, monospace" font-size="24" fill="#4fd1c5">Python · JavaScript · Java · C · C# · C++ · Ruby · HolyC · Go · Rust</text>
+</svg>

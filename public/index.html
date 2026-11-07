@@ -4,8 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Сервер Кодеров — Утилиты</title>
-  <link rel="icon" href="assets/logo.gif" />
+  <meta name="description" content="Удаление комментариев, статистика, анализ, Discord-сниппеты и short-links для 30+ языков программирования." />
+  <meta name="theme-color" content="#0b0d10" />
+  <meta property="og:title" content="Сервер Кодеров — Утилиты" />
+  <meta property="og:description" content="Комментарии, статистика, анализ, Discord-embed — один API." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Сервер Кодеров",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0" },
+    "description": "Удаление комментариев, статистика, анализ и Discord-сниппеты для 30+ языков"
+  }
+  </script>
 </head>
 <body>
   <div class="backdrop"></div>
@@ -17,12 +36,18 @@
         <span class="brand-title">Сервер Кодеров</span>
       </div>
     </div>
+    <nav class="topnav">
+      <a href="#tool">Инструмент</a>
+      <a href="#batch">Пакетно</a>
+      <a href="#api">API</a>
+      <button id="themeBtn" class="theme-btn" aria-label="Сменить тему" title="Сменить тему">🌙</button>
+    </nav>
   </header>
 
   <main>
     <section class="hero">
       <div class="hero-inner">
-        <span class="pill">Приветствую тебя!</span>
+        <span class="pill">Приветствую!</span>
         <h1>Удалите комментарии<br /><span class="gradient">в коде за одну секунду</span></h1>
       </div>
     </section>
@@ -41,10 +66,17 @@
               </label>
             </div>
           </div>
-          <textarea id="inputCode" spellcheck="false" placeholder="// Вставьте ваш код сюда…&#10;function greet(name) {&#10;  // приветствие&#10;  return `Hello ${name}`;&#10;}"></textarea>
+          <div class="editor-wrap">
+            <pre id="inputHighlight" class="highlight" aria-hidden="true"><code></code></pre>
+            <textarea id="inputCode" spellcheck="false" placeholder="// Вставьте код или перетащите файл…&#10;function greet(name) {&#10;  // приветствие&#10;  return `Hello ${name}`;&#10;}"></textarea>
+          </div>
           <div class="panel-foot">
             <span id="inputStats" class="muted">0 символов</span>
             <div class="panel-foot-actions">
+              <label class="toggle">
+                <input type="checkbox" id="minifyCheck" />
+                <span>Минифицировать</span>
+              </label>
               <button id="sampleBtn" class="btn small ghost">Пример</button>
               <button id="clearBtn" class="btn small ghost">Очистить</button>
             </div>
@@ -55,6 +87,14 @@
           <div class="panel-head">
             <h2>Чистый код</h2>
             <div class="panel-actions">
+              <button id="diffBtn" class="btn small ghost" disabled title="Показать изменения">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M3 12h18"/></svg>
+                Diff
+              </button>
+              <button id="swapBtn" class="btn small ghost" disabled title="Поменять местами">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16H3l4 4 4-4H7V4H3v12"/><path d="M17 8h4l-4-4-4 4h4v12h4V8"/></svg>
+                Swap
+              </button>
               <button id="copyBtn" class="btn small ghost" disabled>
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Копировать
@@ -65,7 +105,10 @@
               </button>
             </div>
           </div>
-          <textarea id="outputCode" spellcheck="false" readonly placeholder="Здесь появится результат…"></textarea>
+          <div class="editor-wrap">
+            <pre id="outputHighlight" class="highlight" aria-hidden="true"><code></code></pre>
+            <textarea id="outputCode" spellcheck="false" readonly placeholder="Здесь появится результат…"></textarea>
+          </div>
           <div class="panel-foot">
             <span id="outputStats" class="muted">—</span>
             <div class="stats-chips" id="statsChips"></div>
@@ -80,6 +123,93 @@
         </button>
       </div>
     </section>
+
+    <section id="batch" class="batch">
+      <h2 class="section-title">Пакетная обработка</h2>
+      <p class="section-sub">
+        Перетащите много файлов (или всю папку) — получите ZIP с чистыми копиями.
+        Язык определяется по расширению автоматически.
+      </p>
+      <div id="batchDrop" class="dropzone">
+        <input type="file" id="batchInput" multiple hidden />
+        <div class="dropzone-inner">
+          <span class="dropzone-icon">📁</span>
+          <span>Перетащите файлы сюда или <b>выберите</b></span>
+          <small>JS, TS, Python, Java, C, C++, C#, Ruby, Go, Rust, PHP, CSS, HTML и др.</small>
+        </div>
+      </div>
+      <div id="batchResult" class="batch-result"></div>
+    </section>
+
+    <section id="api" class="api">
+      <h2 class="section-title">Публичный API</h2>
+      <p class="section-sub">
+        Лимит — 30 запросов в минуту с IP. Идеально для Discord-ботов, CI-скриптов, IDE-плагинов.
+      </p>
+
+      <div class="api-group">
+        <h3 class="api-group-title">🧹 remove — удаление комментариев</h3>
+        <div class="api-card"><span class="api-method post">POST</span><code>/api/remove</code></div>
+        <pre class="code-block"><code>curl -X POST https://codr.netlify.app/api/remove \
+  -H "Content-Type: application/json" \
+  -d '{"code":"# x\nprint(1)","language":"python","minify":false}'
+# → {"result":"print(1)","stats":{...}}</code></pre>
+        <div class="api-card"><span class="api-method get">GET</span><code>/api/remove?action=languages</code></div>
+        <pre class="code-block"><code>curl https://codr.netlify.app/api/remove?action=languages</code></pre>
+      </div>
+
+      <div class="api-group">
+        <h3 class="api-group-title">📊 stats — статистика кода</h3>
+        <div class="api-card"><span class="api-method post">POST</span><code>/api/stats</code></div>
+        <pre class="code-block"><code>curl -X POST https://codr.netlify.app/api/stats \
+  -H "Content-Type: application/json" \
+  -d '{"code":"def f():\n  # x\n  return 1","language":"python"}'
+# → {"stats":{"totalLines":3,"commentLines":1,"minifiedSize":15,"minifySaving":22,...}}</code></pre>
+      </div>
+
+      <div class="api-group">
+        <h3 class="api-group-title">💬 snippets — Discord embed</h3>
+        <div class="api-card"><span class="api-method post">POST</span><code>/api/snippets</code></div>
+        <pre class="code-block"><code>curl -X POST https://codr.netlify.app/api/snippets \
+  -H "Content-Type: application/json" \
+  -d '{"code":"print(1)","language":"python","title":"Мой сниппет"}'
+# → Discord embed JSON. Отправь напрямую: channel.send(response)</code></pre>
+      </div>
+
+      <div class="api-group">
+        <h3 class="api-group-title">🔗 paste — короткая ссылка на код (24 часа)</h3>
+        <div class="api-card"><span class="api-method post">POST</span><code>/api/paste</code></div>
+        <pre class="code-block"><code>curl -X POST https://codr.netlify.app/api/paste \
+  -H "Content-Type: application/json" \
+  -d '{"code":"print(1)","language":"python","ttl":86400}'
+# → {"id":"abc123","url":"https://codr.netlify.app/p/abc123","expiresIn":86400}</code></pre>
+        <div class="api-card"><span class="api-method get">GET</span><code>/api/paste?id=abc123</code></div>
+        <pre class="code-block"><code>curl https://codr.netlify.app/api/paste?id=abc123
+# → {"id":"abc123","language":"python","code":"print(1)",...}</code></pre>
+        <p class="section-sub" style="font-size:13px;margin:6px 0 0;">
+          В Discord: <code>!paste &lt;код&gt;</code> → бот вернёт <code>https://codr.netlify.app/p/abc123</code>. Не засоряет чат огромным кодом.
+          Требует <b>Upstash Redis</b> в env (см. health ниже).
+        </p>
+      </div>
+
+      <div class="api-group">
+        <h3 class="api-group-title">🔬 explain — анализ кода</h3>
+        <div class="api-card"><span class="api-method post">POST</span><code>/api/explain</code></div>
+        <pre class="code-block"><code>curl -X POST https://codr.netlify.app/api/explain \
+  -H "Content-Type: application/json" \
+  -d '{"code":"def f():\n    return 1","language":"python","format":"json"}'
+# → {"language":"python","stats":{...},"structure":{"functions":["f"],...},"complexity":{"score":1,"grade":"A"}}
+
+# format:"discord" вернёт готовый embed для Discord</code></pre>
+      </div>
+
+      <div class="api-group">
+        <h3 class="api-group-title">💚 health — статус сервиса</h3>
+        <div class="api-card"><span class="api-method get">GET</span><code>/api/health</code></div>
+        <pre class="code-block"><code>curl https://codr.netlify.app/api/health
+# → {"status":"ok","version":"2.1.0","storage":"ok","languages":32,"endpoints":[...]}</code></pre>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -92,8 +222,34 @@
     </div>
   </footer>
 
+  <div id="diffModal" class="modal" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-head">
+        <h3>Сравнение «до / после»</h3>
+        <button id="diffClose" class="btn small ghost">Закрыть</button>
+      </div>
+      <div id="diffBody" class="diff-body"></div>
+    </div>
+  </div>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-c.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-ruby.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-rust.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-php.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/diff-match-patch@1.0.5/index.min.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>

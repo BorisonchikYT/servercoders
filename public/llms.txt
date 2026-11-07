@@ -1,0 +1,27 @@
+# Сервер Кодеров
+
+> Удаление комментариев из кода на 30+ языках программирования. Работает в браузере через Netlify Functions. Бесплатно, без регистрации.
+
+## Возможности
+
+- Удаление однострочных (//, #, --, ;) и блочных (/* */, <!-- -->, """""") комментариев
+- 30+ языков: JavaScript, TypeScript, Python 2/3, Java, C, C++, C#, C--, HolyC, Ruby, Go, Rust, PHP, Shell, SQL, CSS, HTML, XML, YAML, TOML, INI, Lua, Dart, Vue, Svelte, Kotlin, Swift, JSX, TSX
+- Сохраняет строковые литералы, шаблонные строки, регулярные выражения
+- Минификация (опционально)
+- Пакетная обработка папок → ZIP
+- Diff-view «до / после»
+- Публичный API
+
+## API
+
+POST /.netlify/functions/remove
+Тело: { "code": string, "language": string, "minify": boolean }
+Ответ: { "result": string, "stats": { before, after, saved, percent, commentsRemoved, linesRemoved, blocksRemoved } }
+
+GET /.netlify/functions/remove?action=languages
+Ответ: { "languages": [{ id, name, ext }] }
+
+## Ссылки
+
+- Главная: https://codr.netlify.app
+- API: https://codr.netlify.app/api/remove

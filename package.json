@@ -1,8 +1,12 @@
 {
   "name": "servercoders",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "build": "echo 'no build needed'"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.34.3",
+    "jszip": "^3.10.1"
   }
 }
