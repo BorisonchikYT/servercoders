@@ -1,40 +1,738 @@
 <!DOCTYPE html>
 <html lang="ru" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Сервер Кодеров — Утилиты для разработчиков</title>
-    <meta
-      name="description"
-      content="Удаление комментариев, статистика, анализ и Discord-сниппеты для 30+ языков программирования."
-    />
-    <meta name="theme-color" content="#08090d" />
-    <meta property="og:title" content="Сервер Кодеров — Утилиты" />
-    <meta property="og:description" content="Комментарии, статистика, анализ, Discord-embed — один API." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <script>
-      (function () {
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Сервер Кодеров — Утилиты для разработчиков</title>
+  <meta name="description" content="Удаление комментариев, статистика, анализ и Discord-сниппеты для 30+ языков программирования." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['class', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          colors: {
+            bg: { DEFAULT: 'rgb(var(--bg) / <alpha-value>)', 2: 'rgb(var(--bg-2) / <alpha-value>)' },
+            surface: { DEFAULT: 'rgb(var(--surface) / <alpha-value>)', 2: 'rgb(var(--surface-2) / <alpha-value>)' },
+            border: 'rgb(var(--border) / <alpha-value>)',
+            text: { DEFAULT: 'rgb(var(--text) / <alpha-value>)', muted: 'rgb(var(--text-muted) / <alpha-value>)', dim: 'rgb(var(--text-dim) / <alpha-value>)' },
+            primary: { DEFAULT: 'rgb(var(--primary) / <alpha-value>)', 2: 'rgb(var(--primary-2) / <alpha-value>)' },
+            accent: 'rgb(var(--accent) / <alpha-value>)',
+            danger: 'rgb(var(--danger) / <alpha-value>)',
+            success: 'rgb(var(--success) / <alpha-value>)',
+            warning: 'rgb(var(--warning) / <alpha-value>)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+          borderRadius: { xs: '10px', sm: '14px', md: '18px', lg: '24px', xl: '32px' },
+          animation: {
+            'fade-up': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
+            'scale-in': 'scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+          },
+          keyframes: {
+            fadeUp: { from: { opacity: '0', transform: 'translateY(24px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+            scaleIn: { from: { opacity: '0', transform: 'scale(0.94)' }, to: { opacity: '1', transform: 'scale(1)' } },
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    :root {
+      --bg: 8 8 12;
+      --bg-2: 14 14 20;
+      --surface: 22 22 30;
+      --surface-2: 30 30 40;
+      --border: 255 255 255;
+      --text: 240 240 250;
+      --text-muted: 150 150 170;
+      --text-dim: 100 100 120;
+      --primary: 138 100 255;
+      --primary-2: 100 60 220;
+      --accent: 90 140 255;
+      --danger: 255 90 90;
+      --success: 60 210 140;
+      --warning: 255 180 60;
+    }
+    [data-theme='light'] {
+      --bg: 250 250 255;
+      --bg-2: 240 240 250;
+      --surface: 255 255 255;
+      --surface-2: 245 245 250;
+      --border: 0 0 0;
+      --text: 15 15 30;
+      --text-muted: 90 90 110;
+      --text-dim: 140 140 160;
+      --primary: 110 70 240;
+      --primary-2: 80 40 200;
+      --accent: 60 110 240;
+    }
+    html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+    body {
+      background-image:
+        radial-gradient(50% 40% at 20% 0%, rgb(var(--primary) / 0.18), transparent 70%),
+        radial-gradient(40% 40% at 100% 30%, rgb(var(--accent) / 0.12), transparent 70%),
+        radial-gradient(60% 50% at 50% 100%, rgb(var(--primary-2) / 0.1), transparent 70%);
+      background-attachment: fixed;
+      transition: background-color 0.5s ease, color 0.5s ease;
+    }
+    [data-theme='light'] body {
+      background-image:
+        radial-gradient(50% 40% at 20% 0%, rgb(var(--primary) / 0.08), transparent 70%),
+        radial-gradient(40% 40% at 100% 30%, rgb(var(--accent) / 0.06), transparent 70%);
+    }
+    ::selection { background: rgb(var(--primary) / 0.35); }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgb(var(--text-dim) / 0.3); border-radius: 8px; }
+    textarea::placeholder { color: rgb(var(--text-dim)); }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .glow-border { position: relative; }
+    .glow-border::before { content:''; position:absolute; inset:-1px; border-radius:inherit; padding:1px; background: linear-gradient(135deg, rgb(var(--primary)/0.6), rgb(var(--accent)/0.3), transparent 60%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none; opacity:0.6; }
+    #inputHighlight, #outputHighlight { scrollbar-width: none; }
+    #inputHighlight::-webkit-scrollbar, #outputHighlight::-webkit-scrollbar { display: none; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+
+<body class="bg-bg text-text font-sans antialiased min-h-screen overflow-x-hidden">
+
+  <!-- ============ NAVBAR (плавающий, как у YUMO) ============ -->
+  <div class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-2rem)] max-w-5xl">
+    <header id="topbar" class="flex items-center justify-between px-5 py-3 rounded-2xl border border-border bg-surface/60 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300">
+      <a href="#" class="flex items-center gap-2.5">
+        <div class="w-8 h-8 grid place-items-center rounded-lg bg-gradient-to-br from-primary to-accent shadow-[0_0_20px_rgb(var(--primary)/0.4)]">
+          <svg viewBox="0 0 32 32" width="18" height="18" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l-4 4l4 4M23 12l4 4l-4 4M19 8l-6 16"/></svg>
+        </div>
+        <span class="font-bold text-sm tracking-tight">Сервер Кодеров</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-1">
+        <a href="#tool" class="text-sm font-medium text-text-muted px-4 py-2 rounded-lg transition-colors hover:text-text hover:bg-surface">Главная</a>
+        <a href="#batch" class="text-sm font-medium text-text-muted px-4 py-2 rounded-lg transition-colors hover:text-text hover:bg-surface">Пакетно</a>
+        <a href="#api" class="text-sm font-medium text-text-muted px-4 py-2 rounded-lg transition-colors hover:text-text hover:bg-surface">API</a>
+        <a href="#faq" class="text-sm font-medium text-text-muted px-4 py-2 rounded-lg transition-colors hover:text-text hover:bg-surface">FAQ</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <button id="themeToggle" aria-label="Сменить тему" class="w-9 h-9 grid place-items-center rounded-full border border-border bg-surface-2 text-text-muted transition-all hover:text-text hover:border-primary">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <a href="#tool" class="inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-xl bg-gradient-to-br from-primary to-primary-2 text-white shadow-[0_4px_20px_rgb(var(--primary)/0.4)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgb(var(--primary)/0.5)]">Начать</a>
+      </div>
+    </header>
+  </div>
+
+  <!-- ============ MAIN ============ -->
+  <main class="max-w-7xl mx-auto px-4 md:px-8 pt-32">
+
+    <!-- HERO -->
+    <section class="pt-12 pb-24 reveal">
+      <div class="inline-flex items-center gap-2 px-4 py-2 mb-10 rounded-xl border border-border bg-surface/60 backdrop-blur-xl">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="rgb(var(--primary))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 9h18M9 21V9"/></svg>
+        <span class="text-xs font-medium text-text-muted">Максимальное удобство</span>
+      </div>
+
+      <h1 class="text-[clamp(40px,7vw,80px)] font-black tracking-[-0.04em] leading-[1.05] mb-8 max-w-4xl">
+        Удаление<br/>
+        <span class="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">комментариев</span><br/>
+        в реальном времени
+      </h1>
+
+      <p class="text-lg text-text-muted max-w-xl leading-relaxed mb-12">
+        Отслеживайте и очищайте код в один клик. Мгновенные результаты, поддержка 30+ языков, автоматическая минификация и детальная статистика.
+      </p>
+
+      <div class="flex flex-wrap gap-3">
+        <a href="#tool" class="inline-flex items-center gap-2 px-7 py-4 text-[15px] font-semibold rounded-xl bg-gradient-to-br from-primary to-primary-2 text-white shadow-[0_4px_24px_rgb(var(--primary)/0.4)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_40px_rgb(var(--primary)/0.5)]">
+          Попробовать
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#api" class="inline-flex items-center gap-2 px-7 py-4 text-[15px] font-semibold rounded-xl border border-border bg-surface/60 backdrop-blur-xl text-text transition-all hover:border-primary hover:-translate-y-0.5">
+          Документация API
+        </a>
+      </div>
+    </section>
+
+    <!-- TOOL (похоже на блок со статусами YUMO) -->
+    <section id="tool" class="py-16 reveal">
+      <div class="mb-10">
+        <h2 class="text-4xl font-black tracking-tight mb-3">Инструмент</h2>
+        <p class="text-text-muted">Вставьте код или перетащите файл — язык определится сам.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- INPUT -->
+        <div class="glow-border rounded-2xl bg-surface/60 backdrop-blur-xl border border-border overflow-hidden transition-all">
+          <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-border">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_12px_rgb(var(--primary))]"></span>
+              <h3 class="text-sm font-bold">Исходный код</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="relative">
+                <select id="languageSelect" class="appearance-none pl-3 pr-8 py-2 text-xs font-medium rounded-lg border border-border bg-surface-2 text-text cursor-pointer outline-none transition-all hover:border-primary/50 focus:border-primary"></select>
+                <svg class="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+              <label class="grid place-items-center w-9 h-9 rounded-lg border border-border bg-surface-2 text-text-muted cursor-pointer transition-all hover:border-primary hover:text-primary" title="Загрузить файл">
+                <input type="file" id="fileInput" hidden />
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/></svg>
+              </label>
+            </div>
+          </div>
+          <div class="relative min-h-[360px]">
+            <pre id="inputHighlight" class="absolute inset-0 w-full h-full p-5 font-mono text-[13px] leading-relaxed whitespace-pre overflow-hidden pointer-events-none"></pre>
+            <textarea id="inputCode" spellcheck="false" class="absolute inset-0 w-full h-full p-5 font-mono text-[13px] leading-relaxed bg-transparent text-transparent caret-primary resize-none outline-none whitespace-pre" placeholder="// Вставьте код или перетащите файл…"></textarea>
+          </div>
+          <div class="flex items-center justify-between gap-3 px-5 py-3 border-t border-border flex-wrap text-xs">
+            <span id="inputStats" class="font-mono text-text-muted text-[11px]">0 символов</span>
+            <div class="flex items-center gap-2 flex-wrap">
+              <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" id="minifyCheck" class="sr-only peer" />
+                <span class="relative w-8 h-5 rounded-full border border-border bg-surface-2 transition-colors peer-checked:bg-primary peer-checked:border-primary">
+                  <span class="absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-text-muted transition-all peer-checked:translate-x-3 peer-checked:bg-white"></span>
+                </span>
+                <span class="text-xs text-text-muted">Минифицировать</span>
+              </label>
+              <button id="sampleBtn" class="px-3.5 py-2 text-xs font-semibold rounded-lg border border-border bg-surface-2 text-text transition-all hover:border-primary/50">Пример</button>
+              <button id="clearBtn" class="px-3.5 py-2 text-xs font-semibold rounded-lg border border-border bg-surface-2 text-text transition-all hover:border-primary/50">Очистить</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- OUTPUT -->
+        <div class="glow-border rounded-2xl bg-surface/60 backdrop-blur-xl border border-border overflow-hidden">
+          <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-border">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-success shadow-[0_0_12px_rgb(var(--success))]"></span>
+              <h3 class="text-sm font-bold">Чистый код</h3>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button id="diffBtn" disabled title="Diff" class="grid place-items-center w-9 h-9 rounded-lg border border-border bg-surface-2 text-text-muted transition-all hover:text-primary hover:border-primary disabled:opacity-30 disabled:cursor-not-allowed">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/></svg>
+              </button>
+              <button id="swapBtn" disabled title="Swap" class="grid place-items-center w-9 h-9 rounded-lg border border-border bg-surface-2 text-text-muted transition-all hover:text-primary hover:border-primary disabled:opacity-30 disabled:cursor-not-allowed">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16H3l4 4 4-4H7V4H3v12M17 8h4l-4-4-4 4h4v12h4V8"/></svg>
+              </button>
+              <button id="copyBtn" disabled title="Копировать" class="grid place-items-center w-9 h-9 rounded-lg border border-border bg-surface-2 text-text-muted transition-all hover:text-primary hover:border-primary disabled:opacity-30 disabled:cursor-not-allowed">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+              <button id="downloadBtn" disabled title="Скачать" class="grid place-items-center w-9 h-9 rounded-lg border border-border bg-surface-2 text-text-muted transition-all hover:text-primary hover:border-primary disabled:opacity-30 disabled:cursor-not-allowed">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="relative min-h-[360px]">
+            <pre id="outputHighlight" class="absolute inset-0 w-full h-full p-5 font-mono text-[13px] leading-relaxed whitespace-pre overflow-hidden pointer-events-none bg-black/10"></pre>
+            <textarea id="outputCode" readonly spellcheck="false" class="absolute inset-0 w-full h-full p-5 font-mono text-[13px] leading-relaxed bg-black/10 text-transparent resize-none outline-none whitespace-pre" placeholder="Здесь появится результат…"></textarea>
+          </div>
+          <div class="flex items-center justify-between gap-3 px-5 py-3 border-t border-border flex-wrap text-xs">
+            <span id="outputStats" class="font-mono text-text-dim text-[11px]">—</span>
+            <div id="statsChips" class="flex gap-1.5 flex-wrap"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-center mt-10">
+        <button id="removeBtn" disabled class="inline-flex items-center gap-2.5 px-10 py-4 text-[15px] font-bold rounded-xl bg-gradient-to-br from-primary to-primary-2 text-white shadow-[0_4px_24px_rgb(var(--primary)/0.4)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_40px_rgb(var(--primary)/0.5)] disabled:opacity-40 disabled:cursor-not-allowed">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9h1m4 0h3M8 13h5M8 4h10a3 3 0 0 1 3 3v8c0 1.6-1.4 3-3 3h-5l-5 3v-3H8a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3M3 3l18 18"/></svg>
+          Удалить комментарии
+          <kbd class="hidden md:inline-flex items-center px-2 py-0.5 text-[10px] font-mono bg-white/15 rounded ml-1">⌘↵</kbd>
+        </button>
+      </div>
+    </section>
+
+    <!-- FEATURES (3 карточки как у YUMO внизу) -->
+    <section class="py-16 reveal">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="rounded-2xl border border-border bg-surface/60 backdrop-blur-xl p-7 transition-all hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgb(var(--primary)/0.15)]">
+          <div class="w-12 h-12 rounded-xl grid place-items-center bg-gradient-to-br from-primary/20 to-accent/20 mb-5">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="rgb(var(--primary))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-2">Быстрая работоспособность</h3>
+          <p class="text-sm text-text-muted leading-relaxed">Нужен быстрый отклик? Результат за 100 миллисекунд — без задержек и очередей.</p>
+        </div>
+        <div class="rounded-2xl border border-border bg-surface/60 backdrop-blur-xl p-7 transition-all hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgb(var(--primary)/0.15)]">
+          <div class="w-12 h-12 rounded-xl grid place-items-center bg-gradient-to-br from-accent/20 to-primary/20 mb-5">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="rgb(var(--accent))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-2">Точность обработки</h3>
+          <p class="text-sm text-text-muted leading-relaxed">Строки, шаблоны и регулярки остаются нетронутыми. Удаляются только настоящие комментарии.</p>
+        </div>
+        <div class="rounded-2xl border border-border bg-surface/60 backdrop-blur-xl p-7 transition-all hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgb(var(--primary)/0.15)]">
+          <div class="w-12 h-12 rounded-xl grid place-items-center bg-gradient-to-br from-success/20 to-primary/20 mb-5">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="rgb(var(--success))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-2">Масштабирование</h3>
+          <p class="text-sm text-text-muted leading-relaxed">От одного бота до сотни — всё так как вы захотите. Пакетная обработка папок в один клик.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BATCH -->
+    <section id="batch" class="py-16 reveal">
+      <div class="mb-10">
+        <h2 class="text-4xl font-black tracking-tight mb-3">Пакетная обработка</h2>
+        <p class="text-text-muted">Перетащите папку — получите ZIP с чистыми копиями.</p>
+      </div>
+      <div id="batchDrop" class="relative overflow-hidden rounded-2xl border-2 border-dashed border-border bg-surface/40 backdrop-blur-xl px-6 py-16 text-center cursor-pointer transition-all hover:border-primary/50 hover:-translate-y-0.5 hover:shadow-[0_20px_60px_rgb(var(--primary)/0.15)]">
+        <input type="file" id="batchInput" multiple hidden />
+        <div class="flex flex-col items-center gap-3">
+          <div class="w-16 h-16 grid place-items-center rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 mb-2">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="rgb(var(--primary))" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><path d="M12 11v6M9 14l3-3 3 3"/></svg>
+          </div>
+          <h3 class="text-lg font-bold">Перетащите файлы сюда</h3>
+          <p class="text-sm text-text-muted">или <b class="text-primary">выберите на устройстве</b></p>
+          <small class="text-[11px] text-text-dim mt-1">JS, TS, Python, Java, C, C++, C#, Ruby, Go, Rust, PHP, CSS, HTML и др.</small>
+        </div>
+      </div>
+      <div id="batchResult" class="mt-8"></div>
+    </section>
+
+    <!-- API -->
+    <section id="api" class="py-16 reveal">
+      <div class="mb-10">
+        <h2 class="text-4xl font-black tracking-tight mb-3">Публичный API</h2>
+        <p class="text-text-muted">Лимит — 30 запросов/мин с IP. Для Discord-ботов, CI, IDE.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <!-- remove -->
+        <div class="rounded-2xl border border-border bg-surface/60 backdrop-blur-xl p-6 transition-all hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgb(var(--primary)/0.1)]">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 grid place-items-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 text-base">🧹</span>
+            <div><h3 class="text-base font-bold font-mono">remove</h3><span class="text-[11px] text-text-muted">удаление комментариев</span></div>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-2 mb-2 rounded-lg border border-border bg-bg-2 font-mono text-xs">
+            <span class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-primary text-white tracking-wider">POST</span>
+            <code>/api/remove</code>
+          </div>
+          <pre class="p-3 rounded-lg border border-border bg-bg-2 text-[11px] leading-relaxed overflow-x-auto font-mono"><code>curl -X POST https://codr.netlify.app/api/remove \
+  -H "Content-Type: application/json" \
+  -d '{"code":"# x\nprint(1)","language":"python"}'</code></pre>
+        </div>
+        <!-- stats -->
+        <div class="rounded-2xl border border-border bg-surface/60 backdrop-blur-xl p-6 transition-all hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgb(var(--primary)/0.1)]">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 grid place-items-center rounded-xl bg-gradient-to-br from-accent/20 to-primary/20 text-base">📊</span>
+            <div><h3 class="text-base font-bold font-mono">stats</h3><span class="text-[11px] text-text-muted">статистика</span></div>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-2 mb-2 rounded-lg border border-border bg-bg-2 font-mono text-xs">
+            <span class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-primary text-white tracking-wider">POST</span>
+            <code>/api/stats</code>
+          </div>
+          <pre class="p-3 rounded-lg border border-border bg-bg-2 text-[11px] leading-relaxed overflow-x-auto font-mono"><code>curl -X POST https://codr.netlify.app/api/stats \
+  -H "Content-Type: application/json" \
+  -d '{"code":"def f():\n  return 1","language":"python"}'</code></pre>
+        </div>
+        <!-- snippets -->
+        <div class="rounded-2xl border border-border bg-surface/60 backdrop-blur-xl p-6 transition-all hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgb(var(--primary)/0.1)]">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 grid place-items-center rounded-xl bg-gradient-to-br from-warning/20 to-primary/20 text-base">💬</span>
+            <div><h3 class="text-base font-bold font-mono">snippets</h3><span class="text-[11px] text-text-muted">Discord embed</span></div>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-2 mb-2 rounded-lg border border-border bg-bg-2 font-mono text-xs">
+            <span class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-primary text-white tracking-wider">POST</span>
+            <code>/api/snippets</code>
+          </div>
+          <pre class="p-3 rounded-lg border border-border bg-bg-2 text-[11px] leading-relaxed overflow-x-auto font-mono"><code>curl -X POST https://codr.netlify.app/api/snippets \
+  -H "Content-Type: application/json" \
+  -d '{"code":"print(1)","language":"python"}'</code></pre>
+        </div>
+        <!-- paste -->
+        <div class="rounded-2xl border border-border bg-surface/60 backdrop-blur-xl p-6 transition-all hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgb(var(--primary)/0.1)]">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 grid place-items-center rounded-xl bg-gradient-to-br from-danger/20 to-primary/20 text-base">🔗</span>
+            <div><h3 class="text-base font-bold font-mono">paste</h3><span class="text-[11px] text-text-muted">short-link 24ч</span></div>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-2 mb-2 rounded-lg border border-border bg-bg-2 font-mono text-xs">
+            <span class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-primary text-white tracking-wider">POST</span>
+            <code>/api/paste</code>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-2 mb-2 rounded-lg border border-border bg-bg-2 font-mono text-xs">
+            <span class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-accent text-white tracking-wider">GET</span>
+            <code>/api/paste?id=abc</code>
+          </div>
+        </div>
+        <!-- explain -->
+        <div class="rounded-2xl border border-border bg-surface/60 backdrop-blur-xl p-6 transition-all hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgb(var(--primary)/0.1)]">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 grid place-items-center rounded-xl bg-gradient-to-br from-success/20 to-primary/20 text-base">🔬</span>
+            <div><h3 class="text-base font-bold font-mono">explain</h3><span class="text-[11px] text-text-muted">анализ</span></div>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-2 mb-2 rounded-lg border border-border bg-bg-2 font-mono text-xs">
+            <span class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-primary text-white tracking-wider">POST</span>
+            <code>/api/explain</code>
+          </div>
+          <pre class="p-3 rounded-lg border border-border bg-bg-2 text-[11px] leading-relaxed overflow-x-auto font-mono"><code>curl -X POST https://codr.netlify.app/api/explain \
+  -H "Content-Type: application/json" \
+  -d '{"code":"def f():\n  return 1","language":"python"}'</code></pre>
+        </div>
+        <!-- health -->
+        <div class="rounded-2xl border border-border bg-surface/60 backdrop-blur-xl p-6 transition-all hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgb(var(--primary)/0.1)]">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 grid place-items-center rounded-xl bg-gradient-to-br from-success/20 to-accent/20 text-base">💚</span>
+            <div><h3 class="text-base font-bold font-mono">health</h3><span class="text-[11px] text-text-muted">статус</span></div>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-2 mb-2 rounded-lg border border-border bg-bg-2 font-mono text-xs">
+            <span class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-accent text-white tracking-wider">GET</span>
+            <code>/api/health</code>
+          </div>
+          <pre class="p-3 rounded-lg border border-border bg-bg-2 text-[11px] leading-relaxed overflow-x-auto font-mono"><code>curl https://codr.netlify.app/api/health</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-16 reveal">
+      <div class="mb-10">
+        <h2 class="text-4xl font-black tracking-tight mb-3">FAQ</h2>
+        <p class="text-text-muted">Часто задаваемые вопросы.</p>
+      </div>
+      <div class="flex flex-col gap-3 max-w-3xl">
+        <details class="rounded-xl border border-border bg-surface/60 backdrop-blur-xl p-5 cursor-pointer group">
+          <summary class="font-semibold list-none flex items-center justify-between">Где происходит обработка кода?<span class="text-primary group-open:rotate-45 transition-transform">+</span></summary>
+          <p class="text-sm text-text-muted mt-3">На Netlify Function через Node.js. Код не сохраняется и не логируется.</p>
+        </details>
+        <details class="rounded-xl border border-border bg-surface/60 backdrop-blur-xl p-5 cursor-pointer group">
+          <summary class="font-semibold list-none flex items-center justify-between">Ломает ли инструмент мой код?<span class="text-primary group-open:rotate-45 transition-transform">+</span></summary>
+          <p class="text-sm text-text-muted mt-3">Нет. Строки, шаблоны и регулярки остаются нетронутыми.</p>
+        </details>
+        <details class="rounded-xl border border-border bg-surface/60 backdrop-blur-xl p-5 cursor-pointer group">
+          <summary class="font-semibold list-none flex items-center justify-between">Есть ли ограничение по размеру?<span class="text-primary group-open:rotate-45 transition-transform">+</span></summary>
+          <p class="text-sm text-text-muted mt-3">Максимум 2 МБ на запрос — достаточно для большинства файлов.</p>
+        </details>
+        <details class="rounded-xl border border-border bg-surface/60 backdrop-blur-xl p-5 cursor-pointer group">
+          <summary class="font-semibold list-none flex items-center justify-between">Инструмент бесплатный?<span class="text-primary group-open:rotate-45 transition-transform">+</span></summary>
+          <p class="text-sm text-text-muted mt-3">Полностью бесплатный, без регистрации и рекламы.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="border-t border-border mt-16 px-4 md:px-8 py-10">
+    <div class="max-w-7xl mx-auto flex flex-wrap gap-4 items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 grid place-items-center rounded-lg bg-gradient-to-br from-primary to-accent">
+          <svg viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l-4 4l4 4M23 12l4 4l-4 4M19 8l-6 16"/></svg>
+        </div>
+        <div>
+          <div class="font-bold text-sm">Сервер Кодеров</div>
+          <div class="text-[11px] text-text-muted">Инструмент для разработчиков</div>
+        </div>
+      </div>
+      <p class="text-xs text-text-muted">© 2026 · Сделано с ❤️</p>
+    </div>
+  </footer>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script>
+    /* ========== THEME ========== */
+    (function() {
+      const saved = localStorage.getItem('sc_theme');
+      if (saved === 'light' || saved === 'dark') document.documentElement.setAttribute('data-theme', saved);
+      else if (matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.setAttribute('data-theme', 'light');
+
+      const sunIcon = document.querySelector('.theme-sun');
+      const moonIcon = document.querySelector('.theme-moon');
+      const updateIcons = () => {
+        const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+        sunIcon.style.display = isDark ? 'none' : 'block';
+        moonIcon.style.display = isDark ? 'block' : 'none';
+      };
+      updateIcons();
+
+      document.getElementById('themeToggle').addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('sc_theme', next);
+        updateIcons();
+      });
+    })();
+
+    /* ========== TOPBAR SCROLL ========== */
+    (function() {
+      const bar = document.getElementById('topbar');
+      window.addEventListener('scroll', () => bar.classList.toggle('shadow-[0_12px_40px_rgba(0,0,0,0.4)]', window.scrollY > 20), { passive: true });
+    })();
+
+    /* ========== REVEAL ========== */
+    (function() {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    })();
+
+    /* ========== HIGHLIGHTER ========== */
+    const KW = new Set(('function const let var return if else for while do switch case break continue class new this extends implements public private protected static void int string bool boolean true false null undefined async await yield import from export default try catch finally throw typeof instanceof def elif lambda pass in not and or is None True False fn struct impl use mut pub enum match loop package func go defer chan select range').split(' '));
+    const IDENT = /^[A-Za-z_$][\w$]*/;
+    const NUM = /^\d[\d_]*(?:\.\d+)?/;
+    const WS = /^\s+/;
+    function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function highlight(code, lang) {
+      const isPy = lang.startsWith('python'), isShell = lang === 'shell', isSql = lang === 'sql', isCss = lang === 'css', isHtml = lang === 'html' || lang === 'xml';
+      const lineC = isPy || isShell ? ['#'] : isSql ? ['--'] : isHtml || isCss ? [] : ['//'];
+      const blockC = isSql || isCss ? [['/*', '*/']] : isHtml ? [['<!--', '-->']] : isPy ? [['"""', '"""'], ["'''", "'''"]] : [['/*', '*/']];
+      const strQ = isHtml ? [] : ['"', "'", '`'];
+      const out = []; let i = 0, n = code.length;
+      while (i < n) {
+        const rest = code.slice(i);
+        const ws = WS.exec(rest); if (ws) { out.push(ws[0]); i += ws[0].length; continue; }
+        let matched = false;
+        for (const [open, close] of blockC) {
+          if (rest.startsWith(open)) { const end = code.indexOf(close, i + open.length); const stop = end === -1 ? n : end + close.length; out.push(`<span class="text-text-dim italic">${esc(code.slice(i, stop))}</span>`); i = stop; matched = true; break; }
+        }
+        if (matched) continue;
+        for (const m of lineC) {
+          if (rest.startsWith(m)) { const nl = code.indexOf('\n', i); const stop = nl === -1 ? n : nl; out.push(`<span class="text-text-dim italic">${esc(code.slice(i, stop))}</span>`); i = stop; matched = true; break; }
+        }
+        if (matched) continue;
+        const q = rest[0];
+        if (strQ.includes(q)) {
+          let j = i + 1;
+          while (j < n) { if (code[j] === '\\') { j += 2; continue; } if (code[j] === q) { j++; break; } j++; }
+          out.push(`<span class="text-success">${esc(code.slice(i, j))}</span>`); i = j; continue;
+        }
+        const num = NUM.exec(rest);
+        if (num) { out.push(`<span class="text-warning">${num[0]}</span>`); i += num[0].length; continue; }
+        const id = IDENT.exec(rest);
+        if (id) { const w = id[0]; out.push(KW.has(w) ? `<span class="text-accent font-semibold">${w}</span>` : w); i += w.length; continue; }
+        out.push(esc(code[i])); i++;
+      }
+      return out.join('');
+    }
+
+    /* ========== CODE EDITOR ========== */
+    (function() {
+      const input = document.getElementById('inputCode');
+      const output = document.getElementById('outputCode');
+      const inputH = document.getElementById('inputHighlight');
+      const outputH = document.getElementById('outputHighlight');
+      const select = document.getElementById('languageSelect');
+      const removeBtn = document.getElementById('removeBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const sampleBtn = document.getElementById('sampleBtn');
+      const copyBtn = document.getElementById('copyBtn');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const swapBtn = document.getElementById('swapBtn');
+      const diffBtn = document.getElementById('diffBtn');
+      const fileInput = document.getElementById('fileInput');
+      const inputStats = document.getElementById('inputStats');
+      const outputStats = document.getElementById('outputStats');
+      const statsChips = document.getElementById('statsChips');
+      const minifyCheck = document.getElementById('minifyCheck');
+
+      const EXT = { js:'javascript',mjs:'javascript',cjs:'javascript',jsx:'jsx',ts:'typescript',tsx:'tsx',java:'java',kt:'kotlin',swift:'swift',c:'c',h:'c',cpp:'cpp',cc:'cpp',cxx:'cpp',hpp:'cpp',cs:'csharp',go:'go',rs:'rust',php:'php',py:'python',rb:'ruby',sh:'shell',bash:'shell',sql:'sql',css:'css',html:'html',htm:'html',xml:'xml',yml:'yaml',yaml:'yaml',toml:'toml',lua:'lua',dart:'dart' };
+      let result = '';
+
+      const render = () => {
+        const lang = select.value || 'javascript';
+        inputH.innerHTML = highlight(input.value, lang);
+        outputH.innerHTML = highlight(output.value, lang);
+        inputH.scrollTop = input.scrollTop; inputH.scrollLeft = input.scrollLeft;
+        outputH.scrollTop = output.scrollTop; outputH.scrollLeft = output.scrollLeft;
+      };
+
+      const updateStats = () => {
+        inputStats.textContent = `${input.value.length.toLocaleString('ru-RU')} символов`;
+        removeBtn.disabled = !input.value.length;
+      };
+
+      const resetOut = () => {
+        result = ''; output.value = ''; outputStats.textContent = '—'; statsChips.innerHTML = '';
+        [copyBtn, downloadBtn, swapBtn, diffBtn].forEach((b) => b.disabled = true);
+        render();
+      };
+
+      fetch('/.netlify/functions/remove?action=languages').then((r) => r.json()).then((d) => {
+        select.innerHTML = (d.languages || []).map((l) => `<option value="${l.id}">${l.name}</option>`).join('');
+        const saved = localStorage.getItem('sc_lang');
+        if (saved) select.value = saved;
+        render();
+      }).catch(() => {});
+
+      input.addEventListener('input', () => { updateStats(); if (result) resetOut(); render(); });
+      input.addEventListener('scroll', render);
+      output.addEventListener('scroll', render);
+      select.addEventListener('change', () => { localStorage.setItem('sc_lang', select.value); resetOut(); render(); });
+
+      removeBtn.addEventListener('click', async () => {
+        if (!input.value.trim()) return;
+        removeBtn.disabled = true;
+        const orig = removeBtn.innerHTML;
+        removeBtn.textContent = 'Обработка…';
         try {
-          var t = localStorage.getItem('sc_theme');
-          if (t === 'light' || t === 'dark') {
-            document.documentElement.setAttribute('data-theme', t);
-          } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-            document.documentElement.setAttribute('data-theme', 'light');
+          const res = await fetch('/.netlify/functions/remove', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: input.value, language: select.value, minify: minifyCheck.checked }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Ошибка');
+          result = data.result;
+          output.value = data.result;
+          outputStats.textContent = `${data.stats.after.toLocaleString('ru-RU')} символов`;
+          statsChips.innerHTML = [
+            `<span class="inline-flex items-center px-2.5 py-1 text-[11px] font-medium rounded-full bg-primary/15 text-primary border border-primary/30">−${data.stats.percent}%</span>`,
+            `<span class="inline-flex items-center px-2.5 py-1 text-[11px] font-medium rounded-full bg-primary/15 text-primary border border-primary/30">${data.stats.saved.toLocaleString('ru-RU')} симв.</span>`,
+            `<span class="inline-flex items-center px-2.5 py-1 text-[11px] font-medium rounded-full bg-primary/15 text-primary border border-primary/30">${data.stats.linesRemoved} строк</span>`,
+            `<span class="inline-flex items-center px-2.5 py-1 text-[11px] font-medium rounded-full bg-primary/15 text-primary border border-primary/30">${data.stats.blocksRemoved} блоч.</span>`,
+          ].join('');
+          [copyBtn, downloadBtn, swapBtn, diffBtn].forEach((b) => b.disabled = false);
+          render();
+        } catch (e) { alert(e.message); }
+        finally { removeBtn.disabled = !input.value.length; removeBtn.innerHTML = orig; }
+      });
+
+      clearBtn.addEventListener('click', () => { input.value = ''; resetOut(); updateStats(); });
+
+      sampleBtn.addEventListener('click', () => {
+        input.value = `// Build metadata
+const appName = "Сервер Кодеров";
+
+/*
+  Feature flags
+*/
+const flags = { beta: true, debug: false };
+
+function greet(name) {
+  const msg = \`Hello \${name}\`; // template
+  return msg;
+}
+
+console.log(greet("Developer"));`;
+        updateStats(); resetOut(); render();
+      });
+
+      copyBtn.addEventListener('click', async () => {
+        if (!result) return;
+        try { await navigator.clipboard.writeText(result); } catch {}
+      });
+
+      downloadBtn.addEventListener('click', () => {
+        if (!result) return;
+        const blob = new Blob([result], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `clean.${select.value}`; a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      swapBtn.addEventListener('click', () => {
+        if (!result) return;
+        input.value = result; resetOut(); updateStats(); render();
+      });
+
+      diffBtn.addEventListener('click', () => {
+        if (!result) return;
+        document.getElementById('diffModal').hidden = false;
+        document.body.style.overflow = 'hidden';
+        const body = document.getElementById('diffBody');
+        const before = input.value, after = result;
+        const bl = before.split('\n'), al = after.split('\n');
+        const max = Math.max(bl.length, al.length);
+        let html = '';
+        for (let i = 0; i < max; i++) {
+          const b = bl[i] ?? '', a = al[i] ?? '';
+          if (b === a) html += `<div class="px-2 py-0.5 rounded opacity-60"><span class="inline-block w-4 text-text-muted"> </span>${esc(b)}</div>`;
+          else {
+            if (b) html += `<div class="px-2 py-0.5 rounded bg-danger/15 line-through opacity-70"><span class="inline-block w-4 text-danger font-bold">−</span>${esc(b)}</div>`;
+            if (a) html += `<div class="px-2 py-0.5 rounded bg-success/15"><span class="inline-block w-4 text-success font-bold">+</span>${esc(a)}</div>`;
           }
-        } catch (e) {}
-      })();
-    </script>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+        }
+        body.innerHTML = html || '<div class="text-text-muted">Изменений нет.</div>';
+      });
+
+      fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        input.value = await file.text();
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (EXT[ext]) select.value = EXT[ext];
+        updateStats(); resetOut(); render();
+        fileInput.value = '';
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); if (!removeBtn.disabled) removeBtn.click(); }
+        if (e.key === 'Escape') {
+          document.getElementById('diffModal').hidden = true;
+          document.body.style.overflow = '';
+        }
+      });
+
+      document.getElementById('diffModal').addEventListener('click', (e) => {
+        if (e.target.hasAttribute('data-close') || e.target.closest('[data-close]')) {
+          document.getElementById('diffModal').hidden = true;
+          document.body.style.overflow = '';
+        }
+      });
+
+      updateStats();
+      render();
+    })();
+
+    /* ========== BATCH ========== */
+    (function() {
+      const drop = document.getElementById('batchDrop');
+      const input = document.getElementById('batchInput');
+      const resultEl = document.getElementById('batchResult');
+      const EXT = { js:'javascript',ts:'typescript',py:'python',java:'java',c:'c',cpp:'cpp',cs:'csharp',rb:'ruby',go:'go',rs:'rust',php:'php',css:'css',html:'html' };
+
+      const handle = async (files) => {
+        const valid = files.filter((f) => EXT[f.name.split('.').pop().toLowerCase()] && f.size <= 500_000);
+        if (!valid.length) return alert('Нет подходящих файлов');
+        resultEl.innerHTML = '<div class="text-text-muted">Обработка…</div>';
+        const payload = await Promise.all(valid.map(async (f) => ({ name: f.name, content: await f.text() })));
+        try {
+          const res = await fetch('/.netlify/functions/batch', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ files: payload }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Ошибка');
+          const ok = data.files.filter((f) => f.result);
+          const errs = data.files.filter((f) => f.error);
+          let html = `<div class="rounded-2xl border border-border bg-surface/60 px-6 py-4 mb-4 flex flex-wrap gap-6 text-sm items-center backdrop-blur-xl">
+            <span>Файлов: <b class="text-primary">${data.summary.total}</b></span>
+            <span>Обработано: <b class="text-primary">${data.summary.processed}</b></span>
+            <span>Сэкономлено: <b class="text-primary">${data.summary.totalSaved.toLocaleString('ru-RU')}</b> симв.</span>
+          </div><div class="flex flex-col gap-2 mb-5">`;
+          for (const f of ok) html += `<div class="rounded-xl border border-border bg-surface/60 px-5 py-3 flex justify-between items-center gap-3 text-sm flex-wrap backdrop-blur-xl"><span class="font-mono">${f.name}</span><span class="text-text-muted text-[11px]">−${f.stats.saved} симв</span></div>`;
+          for (const f of errs) html += `<div class="rounded-xl border border-border bg-surface/60 px-5 py-3 flex justify-between items-center gap-3 text-sm backdrop-blur-xl"><span class="font-mono">${f.name}</span><span class="text-danger text-xs">${f.error}</span></div>`;
+          html += '</div>';
+          if (ok.length) html += `<button id="zipBtn" class="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold rounded-xl bg-gradient-to-br from-primary to-primary-2 text-white shadow-[0_4px_20px_rgb(var(--primary)/0.3)]">📦 Скачать ZIP (${ok.length})</button>`;
+          resultEl.innerHTML = html;
+          document.getElementById('zipBtn')?.addEventListener('click', () => {
+            const blob = new Blob([JSON.stringify(ok.map((f) => ({ name: f.name, result: f.result })), null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'clean-files.json'; a.click();
+            URL.revokeObjectURL(url);
+          });
+        } catch (e) { resultEl.innerHTML = `<div class="text-danger">${e.message}</div>`; }
+      };
+
+      drop.addEventListener('click', () => input.click());
+      drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('border-primary'); });
+      drop.addEventListener('dragleave', () => drop.classList.remove('border-primary'));
+      drop.addEventListener('drop', (e) => { e.preventDefault(); drop.classList.remove('border-primary'); handle([...e.dataTransfer.files]); });
+      input.addEventListener('change', () => { handle([...input.files]); input.value = ''; });
+    })();
+  </script>
+</body>
 </html>
