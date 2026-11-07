@@ -14,7 +14,6 @@ const fileInput = $('#fileInput');
 const inputStats = $('#inputStats');
 const outputStats = $('#outputStats');
 const statsChips = $('#statsChips');
-const langGrid = $('#langGrid');
 const toast = $('#toast');
 
 const SAMPLES = {
@@ -125,7 +124,7 @@ function renderStats(stats) {
 
 async function loadLanguages() {
   try {
-    const res = await fetch('/api/languages');
+    const res = await fetch('/.netlify/functions/remove?action=languages');
     const data = await res.json();
     renderLanguages(data.languages || []);
   } catch {
@@ -137,17 +136,6 @@ function renderLanguages(languages) {
   languageSelect.innerHTML = languages
     .map((l) => `<option value="${l.id}">${l.name}</option>`)
     .join('');
-
-  langGrid.innerHTML = languages
-    .map((l) => `<div class="lang-card" data-lang="${l.id}">${l.name}</div>`)
-    .join('');
-
-  langGrid.querySelectorAll('.lang-card').forEach((card) => {
-    card.addEventListener('click', () => {
-      languageSelect.value = card.dataset.lang;
-      document.getElementById('tool').scrollIntoView({ behavior: 'smooth' });
-    });
-  });
 }
 
 async function removeComments() {
@@ -159,7 +147,7 @@ async function removeComments() {
   removeBtn.textContent = 'Обработка…';
 
   try {
-    const res = await fetch('/api/remove', {
+    const res = await fetch('/.netlify/functions/remove', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, language }),

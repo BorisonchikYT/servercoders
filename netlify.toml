@@ -5,18 +5,6 @@
 [build.environment]
   NODE_VERSION = "20"
 
-[[redirects]]
-  from = "/api/remove"
-  to = "/.netlify/functions/remove"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/api/languages"
-  to = "/.netlify/functions/remove?action=languages"
-  status = 200
-  force = true
-
 [[headers]]
   for = "/*"
   [headers.values]

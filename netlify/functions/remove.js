@@ -28,11 +28,32 @@ const LANGUAGES = {
 };
 
 const NAMES = {
-  javascript: 'JavaScript', typescript: 'TypeScript', jsx: 'JSX', java: 'Java',
-  kotlin: 'Kotlin', swift: 'Swift', c: 'C', cpp: 'C++', csharp: 'C#',
-  cminusminus: 'C--', holyc: 'HolyC', go: 'Go', rust: 'Rust', php: 'PHP',
-  python: 'Python', ruby: 'Ruby', shell: 'Shell / Bash', sql: 'SQL', css: 'CSS',
-  html: 'HTML', xml: 'XML', yaml: 'YAML', toml: 'TOML', ini: 'INI', lua: 'Lua', dart: 'Dart',
+  javascript: 'JavaScript',
+  typescript: 'TypeScript',
+  jsx: 'JSX',
+  java: 'Java',
+  kotlin: 'Kotlin',
+  swift: 'Swift',
+  c: 'C',
+  cpp: 'C++',
+  csharp: 'C#',
+  cminusminus: 'C--',
+  holyc: 'HolyC',
+  go: 'Go',
+  rust: 'Rust',
+  php: 'PHP',
+  python: 'Python',
+  ruby: 'Ruby',
+  shell: 'Shell / Bash',
+  sql: 'SQL',
+  css: 'CSS',
+  html: 'HTML',
+  xml: 'XML',
+  yaml: 'YAML',
+  toml: 'TOML',
+  ini: 'INI',
+  lua: 'Lua',
+  dart: 'Dart',
 };
 
 const LANG_LIST = Object.keys(LANGUAGES).map((id) => ({ id, name: NAMES[id] }));
