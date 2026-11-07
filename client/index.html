@@ -3,47 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Сервер Кодеров — удаление комментариев из кода</title>
-  <meta name="description" content="Удаляйте комментарии из кода на 25+ языках: Python, JavaScript, Java, C, C++, C#, Ruby, Holy C и других. Бесплатно, безопасно." />
-  <link rel="icon" href="/assets/logo.gif" />
-  <link rel="stylesheet" href="/style.css" />
+  <title>Сервер Кодеров — Утилиты</title>
+  <link rel="icon" href="assets/logo.gif" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="backdrop"></div>
 
   <header class="topbar">
     <div class="brand">
-      <img src="/assets/logo.gif" alt="Сервер Кодеров" class="logo" />
+      <img src="assets/logo.gif" alt="" class="logo" />
       <div>
         <span class="brand-title">Сервер Кодеров</span>
-        <span class="brand-tag">comment&nbsp;remover</span>
       </div>
     </div>
-    <nav class="topnav">
-      <a href="#tool">Инструмент</a>
-      <a href="#langs">Языки</a>
-      <a href="#faq">FAQ</a>
-    </nav>
   </header>
 
   <main>
     <section class="hero">
       <div class="hero-inner">
-        <span class="pill">🔧 25+ языков программирования</span>
+        <span class="pill">Приветствую тебя!</span>
         <h1>Удалите комментарии<br /><span class="gradient">за одну секунду</span></h1>
-        <p class="sub">
-          Python, JavaScript, Java, C, C#, C++, C--, HolyC, Ruby, Go, Rust,
-          PHP, CSS, HTML, SQL и другие. Строки, шаблонные литералы и регулярки
-          остаются нетронутыми.
-        </p>
         <div class="hero-actions">
           <a href="#tool" class="btn primary">Начать работу</a>
           <a href="#langs" class="btn ghost">Список языков</a>
-        </div>
-        <div class="features">
-          <div><span>⚡</span><b>Мгновенно</b><small>обработка в браузере</small></div>
-          <div><span>🔐</span><b>Приватно</b><small>без загрузки на сервер</small></div>
-          <div><span>🧠</span><b>Умно</b><small>строки не ломаются</small></div>
         </div>
       </div>
     </section>
@@ -102,66 +85,10 @@
       </div>
     </section>
 
-    <section id="langs" class="langs">
-      <h2 class="section-title">Поддерживаемые языки</h2>
-      <div class="lang-grid" id="langGrid"></div>
-    </section>
-
-    <section class="usecases">
-      <h2 class="section-title">Зачем это нужно</h2>
-      <div class="cards">
-        <article class="card">
-          <span class="card-icon">🚀</span>
-          <h3>Продакшн-сборки</h3>
-          <p>Уберите комментарии разработчика перед деплоем — меньше размер пакета, быстрее доставка.</p>
-        </article>
-        <article class="card">
-          <span class="card-icon">🕵️</span>
-          <h3>Перед обфускацией</h3>
-          <p>Не раскрывайте внутренние заметки, TODO и архитектурные подсказки перед минификацией.</p>
-        </article>
-        <article class="card">
-          <span class="card-icon">📦</span>
-          <h3>Публикация пакета</h3>
-          <p>Чистые исходники для npm, PyPI, RubyGems — меньше шума, аккуратнее распределение.</p>
-        </article>
-        <article class="card">
-          <span class="card-icon">🎓</span>
-          <h3>Учебные задачи</h3>
-          <p>Проверяйте свой код, очищая чужие комментарии и подсказки для чистого сравнения.</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="faq" class="faq">
-      <h2 class="section-title">Частые вопросы</h2>
-      <details>
-        <summary>Где происходит обработка кода?</summary>
-        <p>На Netlify Function через Node.js. Код не сохраняется и не логируется. Если нужна полная приватность — разверните проект у себя локально.</p>
-      </details>
-      <details>
-        <summary>Ломает ли инструмент мой код?</summary>
-        <p>Нет. Парсер учитывает строковые литералы, шаблонные строки и регулярные выражения, поэтому текст, похожий на комментарий внутри строк, остаётся нетронутым.</p>
-      </details>
-      <details>
-        <summary>Поддерживается ли современный синтаксис?</summary>
-        <p>Да — включая шаблонные литералы JavaScript, raw-строки Go, Python-тройные кавычки, Ruby-heredoc (частично) и C-стиль комментариев в HolyC.</p>
-      </details>
-      <details>
-        <summary>Есть ли ограничение по размеру?</summary>
-        <p>Максимум 2 МБ на запрос — этого достаточно для большинства файлов и целых небольших проектов.</p>
-      </details>
-      <details>
-        <summary>Инструмент бесплатный?</summary>
-        <p>Полностью бесплатный, без регистрации и рекламы. Используйте без ограничений.</p>
-      </details>
-    </section>
-  </main>
-
   <footer>
     <div class="foot-inner">
       <div class="foot-brand">
-        <img src="/assets/logo.gif" alt="" class="logo small" />
+        <img src="assets/logo.gif" alt="" class="logo small" />
         <span>Сервер Кодеров</span>
       </div>
       <p class="muted">© 2026 Сервер Кодеров. Инструмент для разработчиков.</p>
@@ -170,6 +97,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="/app.js" defer></script>
+  <script src="app.js" defer></script>
 </body>
 </html>
